@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BYFT Max Effeciency Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: #01030D;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tool-container {
+      background: #23272f;
+      border-radius: 24px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      padding: 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      min-width: 320px;
+    }
+    label {
+      margin-bottom: 0.2rem;
+      font-weight: 500;
+    }
+    input, select {
+      font-size: 1.1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: none;
+      margin-top: 0.2rem;
+    }
+    button {
+      background: #141620;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 18px;
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+      border: 3px solid transparent;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      margin-top: 1rem;
+    }
+    button:hover, button:focus {
+      background: #2A2D34;
+      border-color: #64AAFA;
+      outline: none;
+    }
+    #result {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      color: #64AAFA;
+      font-weight: bold; /* Make result text bold */
+      white-space: pre-line;
+      word-break: break-word;
+      text-align: left;
+      background: #181818;
+      border-radius: 12px;
+      padding: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    /* Toggle button styles */
+    .toggle-darkmode-btn {
+      position: absolute;
+      top: 32px;
+      right: 32px;
+      background: #141620;
+      color: #fff;
+      border: 3px solid transparent;
+      border-radius: 18px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      z-index: 10;
+    }
+    .toggle-darkmode-btn:hover, .toggle-darkmode-btn:focus {
+      background: #2A2D34;
+      border-color: #64AAFA;
+      outline: none;
+    }
+    /* Light mode styles */
+    body.light-mode {
+      background: #B2B5C6;
+      color: #000;
+    }
+    body.light-mode .tool-container {
+      background: #EAEEF5;
+      color: #000;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+    body.light-mode label {
+      color: #000;
+    }
+    body.light-mode input, body.light-mode select {
+      color: #000;
+      background: #fff;
+    }
+    body.light-mode button {
+      background: #EAEEF5;
+      color: #000;
+      border: 3px solid transparent;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    body.light-mode button:hover,
+    body.light-mode button:focus {
+      background: #D5D7E1;
+      border-color: #64AAFA;
+      color: #000;
+    }
+    body.light-mode #result {
+      background: #e4e5ec;
+      color: #64AAFA;
+      font-weight: bold; 
+    }
+    body.light-mode .toggle-darkmode-btn {
+      background: #EAEEF5;
+      color: #000;
+      border: 3px solid transparent;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    body.light-mode .toggle-darkmode-btn:hover,
+    body.light-mode .toggle-darkmode-btn:focus {
+      background: #D5D7E1;
+      border-color: #64AAFA;
+      color: #000;
+    }
+    @media (max-width: 700px) {
+      .tool-container {
+        padding: 1rem 0.5rem;
+        min-width: unset;
+        width: 98vw;
+      }
+      .toggle-darkmode-btn {
+        top: 16px;
+        right: 16px;
+        padding: 0.6rem 1.1rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-darkmode-btn" id="toggleDarkModeBtn">Toggle Dark Mode</button>
+  <div class="tool-container">
+    <h2>BYFT Max Effeciency Tool</h2>
+    <form id="machineForm" onsubmit="return false;" style="width:100%;">
+      <div class="input-group">
+        <label for="name">Item Name:</label>
+        <select id="name" name="name" required>
+          <option>Iron Ore</option>
+          <option>Copper Ore</option>
+          <option>Aluminum Ore</option>
+          <option>Gold Ore</option>
+          <option>Coal Ore</option>
+          <option>Sand</option>
+          <option>Crude Oil</option>
+          <option>Plastic</option>
+          <option>Rubber</option>
+          <option>Iron Ingot</option>
+          <option>Copper Ingot</option>
+          <option>Aluminum Ingot</option>
+          <option>Gold Ingot</option>
+          <option>Glass</option>
+          <option>Steel Ingot</option>
+          <option>Cast Iron Ingot</option>
+          <option>Aluminum Casing S</option>
+          <option>Aluminum Casing M</option>
+          <option>Aluminum Casing L</option>
+          <option>Plastic Casing S</option>
+          <option>Plastic Casing M</option>
+          <option>Plastic Casing L</option>
+          <option>Steel Casing S</option>
+          <option>Steel Casing M</option>
+          <option>Steel Casing L</option>
+          <option>Aluminum Frame</option>
+          <option>Blade</option>
+          <option>Steel Chain</option>
+          <option>Steel Frame</option>
+          <option>Battery</option>
+          <option>Circuit Board</option>
+          <option>Screen</option>
+          <option>Wiring</option>
+          <option>Heating Element</option>
+          <option>Cooling Element</option>
+          <option>Hand Tools</option>
+          <option>Wheel S</option>
+          <option>Wheel M</option>
+          <option>Wheel L</option>
+          <option>Piston</option>
+          <option>V2 Engine Block</option>
+          <option>V6 Engine Block</option>
+          <option>V8 Engine Block</option>
+          <option>Vehicle Body</option>
+          <option>Battery Pack</option>
+          <option>CPU</option>
+          <option>GPU</option>
+          <option>Hard Drive Disk</option>
+          <option>Electric Motor</option>
+          <option>Drive Unit</option>
+          <option>V2 Engine</option>
+          <option>V6 Engine</option>
+          <option>V8 Engine</option>
+          <option>Headphones</option>
+          <option>Mouse</option>
+          <option>Keyboard</option>
+          <option>Server Rack</option>
+          <option>Oven</option>
+          <option>Dishwasher</option>
+          <option>Kettle</option>
+          <option>Speakers</option>
+          <option>Earbuds</option>
+          <option>Toaster</option>
+          <option>Washing Machine</option>
+          <option>Blender</option>
+          <option>Microwave</option>
+          <option>Fridge</option>
+          <option>Desk Fan</option>
+          <option>Power Tools</option>
+          <option>Smart Watch</option>
+          <option>TV</option>
+          <option>Server</option>
+          <option>Crypto Mining Rig</option>
+          <option>Electric Lawn Mower</option>
+          <option>Phone</option>
+          <option>Tablet</option>
+          <option>Laptop</option>
+          <option>PC</option>
+          <option>Console</option>
+          <option>Wheelbarrow</option>
+          <option>Scooter</option>
+          <option>Shopping Cart</option>
+          <option>Bicycle</option>
+          <option>Electric Scooter</option>
+          <option>Go-Kart</option>
+          <option>Motorcycle</option>
+          <option>Quad</option>
+          <option>Golf Cart</option>
+          <option>Car</option>
+          <option>Van</option>
+          <option>Truck</option>
+        </select>
+      </div>
+      <!--
+      <div class="input-group">
+        <label for="quantity">Quantity:</label>
+        <input id="quantity" name="quantity" type="number" min="1" value="1" required>
+      </div>
+      <div class="input-group">
+        <label for="targetTime">Target Time (seconds):</label>
+        <input id="targetTime" name="targetTime" type="number" min="1" value="15" required>
+      </div>
+      -->
+      <button type="submit">Calculate</button>
+    </form>
+    <div id="result"></div>
+    <small style="display:block; margin-top:0.5rem; text-align:left; color:#aaa;">
+      This is under the assumption that everything is the same level.<br>
+      Not all farms require conveyors.<br>
+      More features coming soon!
+    </small>
+  </div>
+  <script>
+    // Theme persistence and toggle logic
+    function setTheme(mode) {
+      if (mode === 'light') {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('byft-theme', 'light');
+      } else {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('byft-theme', 'dark');
+      }
+    }
+
+    // On load, set theme from storage
+    (function() {
+      const saved = localStorage.getItem('byft-theme');
+      if (saved === 'light') setTheme('light');
+      else setTheme('dark');
+    })();
+
+    document.getElementById('toggleDarkModeBtn').addEventListener('click', function() {
+      if (document.body.classList.contains('light-mode')) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+    });
+  </script>
+  <script>
+  fetch('BYFT_formatted.json')
+    .then(res => res.json())
+    .then(data => {
+      window.initBYFTData(data);
+    });
+  </script>
+  <script src="format.js"></script>
+  <script>
+    document.getElementById('machineForm').addEventListener('submit', function() {
+      const name = document.getElementById('name').value.trim();
+      let targetTime = 15;
+      let quantity = 1;
+      // Use the target time and quantity directly
+      try {
+        const result = window.calculateMachinesSummary(name, quantity, targetTime);
+        document.getElementById('result').textContent = result;
+      } catch (e) {
+        document.getElementById('result').textContent = "Error: " + e.message;
+      }
+    });
+  </script>
+</body>
+</html>

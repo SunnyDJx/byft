@@ -1,0 +1,931 @@
+[
+  {
+    "Name": "Iron Ore",
+    "Value": 5,
+    "Time": 5,
+    "Source": "Miner",
+    "Parts": {}
+  },
+  {
+    "Name": "Copper Ore",
+    "Value": 5,
+    "Time": 5,
+    "Source": "Miner",
+    "Parts": {}
+  },
+  {
+    "Name": "Aluminum Ore",
+    "Value": 5,
+    "Time": 5,
+    "Source": "Miner",
+    "Parts": {}
+  },
+  {
+    "Name": "Gold Ore",
+    "Value": 5,
+    "Time": 5,
+    "Source": "Miner",
+    "Parts": {}
+  },
+  {
+    "Name": "Coal Ore",
+    "Value": 5,
+    "Time": 5,
+    "Source": "Miner",
+    "Parts": {}
+  },
+  {
+    "Name": "Sand",
+    "Value": 5,
+    "Time": 5,
+    "Source": "Miner",
+    "Parts": {}
+  },
+  {
+    "Name": "Crude Oil",
+    "Value": 5,
+    "Time": 5,
+    "Source": "Oil Rig",
+    "Parts": {}
+  },
+  {
+    "Name": "Plastic",
+    "Value": 15,
+    "Time": 5,
+    "Source": "Oil Refinery",
+    "Parts": {
+      "Crude Oil": 1
+    }
+  },
+  {
+    "Name": "Rubber",
+    "Value": 15,
+    "Time": 5,
+    "Source": "Oil Refinery",
+    "Parts": {
+      "Crude Oil": 1
+    }
+  },
+  {
+    "Name": "Iron Ingot",
+    "Value": 10,
+    "Time": 5,
+    "Source": "Smelter",
+    "Parts": {
+      "Iron Ore": 1
+    }
+  },
+  {
+    "Name": "Copper Ingot",
+    "Value": 10,
+    "Time": 5,
+    "Source": "Smelter",
+    "Parts": {
+      "Copper Ore": 1
+    }
+  },
+  {
+    "Name": "Aluminum Ingot",
+    "Value": 10,
+    "Time": 5,
+    "Source": "Smelter",
+    "Parts": {
+      "Aluminum Ore": 1
+    }
+  },
+  {
+    "Name": "Gold Ingot",
+    "Value": 10,
+    "Time": 5,
+    "Source": "Smelter",
+    "Parts": {
+      "Gold Ore": 1
+    }
+  },
+  {
+    "Name": "Glass",
+    "Value": 10,
+    "Time": 5,
+    "Source": "Smelter",
+    "Parts": {
+      "Sand": 1
+    }
+  },
+  {
+    "Name": "Steel Ingot",
+    "Value": 30,
+    "Time": 7.5,
+    "Source": "Blast Furnace",
+    "Parts": {
+      "Coal Ore": 1,
+      "Iron Ore": 1
+    }
+  },
+  {
+    "Name": "Cast Iron Ingot",
+    "Value": 45,
+    "Time": 7.5,
+    "Source": "Blast Furnace",
+    "Parts": {
+      "Coal Ore": 1,
+      "Iron Ingot": 1
+    }
+  },
+  {
+    "Name": "Aluminum Casing S",
+    "Value": 25,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Aluminum Ingot": 1
+    }
+  },
+  {
+    "Name": "Aluminum Casing M",
+    "Value": 50,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Aluminum Ingot": 2
+    }
+  },
+  {
+    "Name": "Aluminum Casing L",
+    "Value": 75,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Aluminum Ingot": 3
+    }
+  },
+  {
+    "Name": "Plastic Casing S",
+    "Value": 38,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Plastic": 1
+    }
+  },
+  {
+    "Name": "Plastic Casing M",
+    "Value": 75,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Plastic": 2
+    }
+  },
+  {
+    "Name": "Plastic Casing L",
+    "Value": 113,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Plastic": 3
+    }
+  },
+  {
+    "Name": "Steel Casing S",
+    "Value": 75,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Steel Ingot": 1
+    }
+  },
+  {
+    "Name": "Steel Casing M",
+    "Value": 150,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Steel Ingot": 2
+    }
+  },
+  {
+    "Name": "Steel Casing L",
+    "Value": 225,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Steel Ingot": 3
+    }
+  },
+  {
+    "Name": "Aluminum Frame",
+    "Value": 50,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Aluminum Ingot": 2
+    }
+  },
+  {
+    "Name": "Blade",
+    "Value": 75,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Steel Ingot": 1
+    }
+  },
+  {
+    "Name": "Steel Chain",
+    "Value": 75,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Steel Ingot": 1
+    }
+  },
+  {
+    "Name": "Steel Frame",
+    "Value": 150,
+    "Time": 7.5,
+    "Source": "Shaper",
+    "Parts": {
+      "Steel Ingot": 2
+    }
+  },
+  {
+    "Name": "Battery",
+    "Value": 100,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Iron Ingot": 2,
+      "Copper Ingot": 2
+    }
+  },
+  {
+    "Name": "Circuit Board",
+    "Value": 100,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Copper Ingot": 3,
+      "Glass": 1
+    }
+  },
+  {
+    "Name": "Screen",
+    "Value": 100,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Glass": 3,
+      "Copper Ingot": 1
+    }
+  },
+  {
+    "Name": "Wiring",
+    "Value": 63,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Copper Ingot": 1,
+      "Plastic": 1
+    }
+  },
+  {
+    "Name": "Heating Element",
+    "Value": 50,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Iron Ingot": 1,
+      "Copper Ingot": 1
+    }
+  },
+  {
+    "Name": "Cooling Element",
+    "Value": 50,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Iron Ingot": 1,
+      "Copper Ingot": 1
+    }
+  },
+  {
+    "Name": "Hand Tools",
+    "Value": 150,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Steel Ingot": 1,
+      "Plastic": 2
+    }
+  },
+  {
+    "Name": "Wheel S",
+    "Value": 113,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Steel Ingot": 1,
+      "Rubber": 1
+    }
+  },
+  {
+    "Name": "Wheel M",
+    "Value": 188,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Steel Ingot": 2,
+      "Rubber": 1
+    }
+  },
+  {
+    "Name": "Wheel L",
+    "Value": 225,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Steel Ingot": 2,
+      "Rubber": 2
+    }
+  },
+  {
+    "Name": "Piston",
+    "Value": 138,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Aluminum Ingot": 1,
+      "Cast Iron Ingot": 1
+    }
+  },
+  {
+    "Name": "V2 Engine Block",
+    "Value": 100,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Steel Ingot": 1,
+      "Aluminum Ingot": 1
+    }
+  },
+  {
+    "Name": "V6 Engine Block",
+    "Value": 263,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Steel Ingot": 2,
+      "Cast Iron Ingot": 1
+    }
+  },
+  {
+    "Name": "V8 Engine Block",
+    "Value": 375,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Steel Ingot": 2,
+      "Cast Iron Ingot": 2
+    }
+  },
+  {
+    "Name": "Vehicle Body",
+    "Value": 200,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Steel Ingot": 2,
+      "Aluminum Ingot": 2
+    }
+  },
+  {
+    "Name": "Battery Pack",
+    "Value": 726,
+    "Time": 10,
+    "Source": "Constructor I",
+    "Parts": {
+      "Battery": 3,
+      "Wiring": 1
+    }
+  },
+  {
+    "Name": "CPU",
+    "Value": 125,
+    "Time": 10,
+    "Source": "Constructor II",
+    "Parts": {
+      "Copper Ingot": 2,
+      "Gold Ingot": 2,
+      "Glass": 1
+    }
+  },
+  {
+    "Name": "GPU",
+    "Value": 700,
+    "Time": 10,
+    "Source": "Constructor II",
+    "Parts": {
+      "Circuit Board": 2,
+      "Gold Ingot": 4,
+      "Copper Ingot": 4
+    }
+  },
+  {
+    "Name": "Hard Drive Disk",
+    "Value": 350,
+    "Time": 10,
+    "Source": "Constructor II",
+    "Parts": {
+      "Circuit Board": 1,
+      "Aluminum Ingot": 2,
+      "Copper Ingot": 2
+    }
+  },
+  {
+    "Name": "Electric Motor",
+    "Value": 773,
+    "Time": 10,
+    "Source": "Constructor II",
+    "Parts": {
+      "Circuit Board": 1,
+      "Wiring": 3,
+      "Iron Ingot": 2
+    }
+  },
+  {
+    "Name": "Drive Unit",
+    "Value": 3198,
+    "Time": 10,
+    "Source": "Constructor II",
+    "Parts": {
+      "Circuit Board": 1,
+      "Electric Motor": 1,
+      "Battery Pack": 1
+    }
+  },
+  {
+    "Name": "V2 Engine",
+    "Value": 1098,
+    "Time": 10,
+    "Source": "Constructor II",
+    "Parts": {
+      "Piston": 2,
+      "V2 Engine Block": 1,
+      "Wiring": 1
+    }
+  },
+  {
+    "Name": "V6 Engine",
+    "Value": 2885,
+    "Time": 10,
+    "Source": "Constructor II",
+    "Parts": {
+      "Piston": 6,
+      "V6 Engine Block": 1,
+      "Wiring": 1
+    }
+  },
+  {
+    "Name": "V8 Engine",
+    "Value": 3885,
+    "Time": 10,
+    "Source": "Constructor II",
+    "Parts": {
+      "Piston": 8,
+      "V8 Engine Block": 1,
+      "Wiring": 1
+    }
+  },
+  {
+    "Name": "Headphones",
+    "Value": 378,
+    "Time": 12.5,
+    "Source": "Assembler I",
+    "Parts": {
+      "Wiring": 2,
+      "Aluminum Casing S": 1
+    }
+  },
+  {
+    "Name": "Mouse",
+    "Value": 345,
+    "Time": 12.5,
+    "Source": "Assembler I",
+    "Parts": {
+      "Circuit Board": 1,
+      "Plastic Casing S": 1
+    }
+  },
+  {
+    "Name": "Keyboard",
+    "Value": 438,
+    "Time": 12.5,
+    "Source": "Assembler I",
+    "Parts": {
+      "Circuit Board": 1,
+      "Plastic Casing M": 1
+    }
+  },
+  {
+    "Name": "Server Rack",
+    "Value": 35250,
+    "Time": 25,
+    "Source": "Assembler I",
+    "Parts": {
+      "Server": 4,
+      "Aluminum Frame": 4
+    }
+  },
+  {
+    "Name": "Oven",
+    "Value": 875,
+    "Time": 12.5,
+    "Source": "Assembler I",
+    "Parts": {
+      "Heating Element": 4,
+      "Steel Casing M": 1
+    }
+  },
+  {
+    "Name": "Dishwasher",
+    "Value": 2120,
+    "Time": 12.5,
+    "Source": "Assembler I",
+    "Parts": {
+      "Electric Motor": 1,
+      "Aluminum Casing L": 1
+    }
+  },
+  {
+    "Name": "Kettle",
+    "Value": 250,
+    "Time": 12.5,
+    "Source": "Assembler I",
+    "Parts": {
+      "Heating Element": 1,
+      "Aluminum Casing M": 1
+    }
+  },
+  {
+    "Name": "Speakers",
+    "Value": 1203,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Circuit Board": 2,
+      "Wiring": 2,
+      "Plastic Casing M": 1
+    }
+  },
+  {
+    "Name": "Earbuds",
+    "Value": 1428,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Circuit Board": 2,
+      "Battery": 2,
+      "Plastic Casing S": 2
+    }
+  },
+  {
+    "Name": "Toaster",
+    "Value": 489,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Heating Element": 1,
+      "Wiring": 1,
+      "Aluminum Casing M": 1
+    }
+  },
+  {
+    "Name": "Washing Machine",
+    "Value": 2844,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Electric Motor": 1,
+      "Circuit Board": 1,
+      "Aluminum Casing L": 1
+    }
+  },
+  {
+    "Name": "Blender",
+    "Value": 2994,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Electric Motor": 1,
+      "Blade": 2,
+      "Plastic Casing M": 1
+    }
+  },
+  {
+    "Name": "Microwave",
+    "Value": 2619,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Heating Element": 1,
+      "Electric Motor": 1,
+      "Aluminum Casing M": 1
+    }
+  },
+  {
+    "Name": "Fridge",
+    "Value": 1203,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Cooling Element": 1,
+      "Wiring": 2,
+      "Steel Casing L": 1
+    }
+  },
+  {
+    "Name": "Desk Fan",
+    "Value": 3183,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Electric Motor": 1,
+      "Wiring": 1,
+      "Blade": 3
+    }
+  },
+  {
+    "Name": "Power Tools",
+    "Value": 5052,
+    "Time": 12.5,
+    "Source": "Assembler II",
+    "Parts": {
+      "Electric Motor": 2,
+      "Battery": 1,
+      "Plastic Casing S": 1
+    }
+  },
+  {
+    "Name": "Smart Watch",
+    "Value": 1225,
+    "Time": 12.5,
+    "Source": "Assembler III",
+    "Parts": {
+      "Screen": 1,
+      "CPU": 1,
+      "Battery": 1,
+      "Aluminum Casing S": 1
+    }
+  },
+  {
+    "Name": "TV",
+    "Value": 4337,
+    "Time": 12.5,
+    "Source": "Assembler III",
+    "Parts": {
+      "Screen": 8,
+      "Circuit Board": 2,
+      "Wiring": 2,
+      "Plastic Casing L": 1
+    }
+  },
+  {
+    "Name": "Server",
+    "Value": 7000,
+    "Time": 12.5,
+    "Source": "Assembler III",
+    "Parts": {
+      "CPU": 1,
+      "Circuit Board": 4,
+      "Hard Disk Drive": 4,
+      "Aluminum Casing L": 1
+    }
+  },
+  {
+    "Name": "Crypto Mining Rig",
+    "Value": 16013,
+    "Time": 12.5,
+    "Source": "Assembler III",
+    "Parts": {
+      "CPU": 1,
+      "GPU": 6,
+      "Circuit Board": 2,
+      "Aluminum Frame": 1
+    }
+  },
+  {
+    "Name": "Electric Lawn Mower",
+    "Value": 4984,
+    "Time": 12.5,
+    "Source": "Assembler III",
+    "Parts": {
+      "Electric Motor": 1,
+      "Wiring": 2,
+      "Blade": 4,
+      "Steel Casing L": 1
+    }
+  },
+  {
+    "Name": "Phone",
+    "Value": 1800,
+    "Time": 12.5,
+    "Source": "Assembler IV",
+    "Parts": {
+      "CPU": 1,
+      "Screen": 1,
+      "Circuit Board": 1,
+      "Battery": 1,
+      "Aluminum Casing S": 1
+    }
+  },
+  {
+    "Name": "Tablet",
+    "Value": 3100,
+    "Time": 12.5,
+    "Source": "Assembler IV",
+    "Parts": {
+      "CPU": 1,
+      "Screen": 2,
+      "Circuit Board": 2,
+      "Battery": 2,
+      "Aluminum Casing M": 1
+    }
+  },
+  {
+    "Name": "Laptop",
+    "Value": 4700,
+    "Time": 12.5,
+    "Source": "Assembler IV",
+    "Parts": {
+      "CPU": 1,
+      "Screen": 4,
+      "Circuit Board": 2,
+      "Battery": 4,
+      "Aluminum Casing M": 1
+    }
+  },
+  {
+    "Name": "PC",
+    "Value": 7200,
+    "Time": 12.5,
+    "Source": "Assembler IV",
+    "Parts": {
+      "CPU": 1,
+      "GPU": 1,
+      "Circuit Board": 2,
+      "Hard Disk Drive": 2,
+      "Aluminum Casing L": 1
+    }
+  },
+  {
+    "Name": "Console",
+    "Value": 6200,
+    "Time": 12.5,
+    "Source": "Assembler IV",
+    "Parts": {
+      "CPU": 1,
+      "GPU": 1,
+      "Circuit Board": 3,
+      "Hard Disk Drive": 1,
+      "Plastic Casing M": 1
+    }
+  },
+  {
+    "Name": "Wheelbarrow",
+    "Value": 1690,
+    "Time": 15,
+    "Source": "Vehicle Maker I",
+    "Parts": {
+      "Wheel M": 1,
+      "Steel Casing M": 1
+    }
+  },
+  {
+    "Name": "Scooter",
+    "Value": 1505,
+    "Time": 15,
+    "Source": "Vehicle Maker I",
+    "Parts": {
+      "Wheel S": 2,
+      "Steel Casing S": 1
+    }
+  },
+  {
+    "Name": "Shopping Cart",
+    "Value": 3010,
+    "Time": 15,
+    "Source": "Vehicle Maker I",
+    "Parts": {
+      "Wheel S": 4,
+      "Steel Frame": 1
+    }
+  },
+  {
+    "Name": "Bicycle",
+    "Value": 4131,
+    "Time": 15,
+    "Source": "Vehicle Maker II",
+    "Parts": {
+      "Wheel M": 2,
+      "Steel Frame": 2,
+      "Steel Chain": 1
+    }
+  },
+  {
+    "Name": "Electric Scooter",
+    "Value": 19245,
+    "Time": 15,
+    "Source": "Vehicle Maker II",
+    "Parts": {
+      "Wheel S": 2,
+      "Steel Casing S": 1,
+      "Drive Unit": 1
+    }
+  },
+  {
+    "Name": "Go-Kart",
+    "Value": 20900,
+    "Time": 15,
+    "Source": "Vehicle Maker II",
+    "Parts": {
+      "Wheel S": 4,
+      "Steel Casing M": 1,
+      "Drive Unit": 1
+    }
+  },
+  {
+    "Name": "Motorcycle",
+    "Value": 11088,
+    "Time": 15,
+    "Source": "Vehicle Maker III",
+    "Parts": {
+      "Wheel L": 2,
+      "Steel Casing L": 1,
+      "V2 Engine": 1,
+      "Steel Chain": 1
+    }
+  },
+  {
+    "Name": "Quad",
+    "Value": 13716,
+    "Time": 15,
+    "Source": "Vehicle Maker III",
+    "Parts": {
+      "Wheel L": 4,
+      "Steel Casing L": 1,
+      "V2 Engine": 1,
+      "Wiring": 1
+    }
+  },
+  {
+    "Name": "Golf Cart",
+    "Value": 24978,
+    "Time": 15,
+    "Source": "Vehicle Maker III",
+    "Parts": {
+      "Wheel M": 4,
+      "Steel Frame": 1,
+      "Drive Unit": 1,
+      "Wiring": 1
+    }
+  },
+  {
+    "Name": "Car",
+    "Value": 28917,
+    "Time": 15,
+    "Source": "Vehicle Maker IV",
+    "Parts": {
+      "Wheel L": 4,
+      "Vehicle Body": 1,
+      "V6 Engine": 1,
+      "Wiring": 2,
+      "Glass": 2
+    }
+  },
+  {
+    "Name": "Van",
+    "Value": 30758,
+    "Time": 15,
+    "Source": "Vehicle Maker IV",
+    "Parts": {
+      "Wheel L": 4,
+      "Vehicle Body": 2,
+      "V6 Engine": 1,
+      "Wiring": 3,
+      "Glass": 2
+    }
+  },
+  {
+    "Name": "Truck",
+    "Value": 42539,
+    "Time": 15,
+    "Source": "Vehicle Maker IV",
+    "Parts": {
+      "Wheel L": 6,
+      "Vehicle Body": 3,
+      "V8 Engine": 1,
+      "Wiring": 4,
+      "Glass": 2
+    }
+  }
+]

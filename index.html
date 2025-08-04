@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Your Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: #01030D;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      transition: background 0.2s, color 0.2s;
+    }
+    .container {
+      display: flex;
+      gap: 3rem;
+    }
+    .square-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 260px;
+      height: 260px;
+      background: #141620;
+      border-radius: 24px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+      text-align: center;
+      cursor: pointer;
+      border: 3px solid transparent;
+    }
+    .square-link:hover, .square-link:focus {
+      background: #2A2D34;
+      transform: scale(1.05);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      border-color: #64AAFA;
+      outline: none;
+    }
+
+    /* Toggle button styles */
+    .toggle-darkmode-btn {
+      position: absolute;
+      top: 32px;
+      right: 32px;
+      background: #141620;
+      color: #fff;
+      border: 3px solid transparent;
+      border-radius: 18px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      z-index: 10;
+    }
+    .toggle-darkmode-btn:hover, .toggle-darkmode-btn:focus {
+      background: #2A2D34;
+      border-color: #64AAFA;
+      outline: none;
+    }
+
+    /* Light mode styles */
+    body.light-mode {
+      background: #B2B5C6;
+      color: #000;
+    }
+    body.light-mode .square-link {
+      background: #EAEEF5;
+      color: #000;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      border: 3px solid transparent;
+    }
+    body.light-mode .square-link:hover,
+    body.light-mode .square-link:focus {
+      background: #D5D7E1;
+      border-color: #64AAFA;
+      color: #000;
+    }
+    body.light-mode .toggle-darkmode-btn {
+      background: #EAEEF5;
+      color: #000;
+      border: 3px solid transparent;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    body.light-mode .toggle-darkmode-btn:hover,
+    body.light-mode .toggle-darkmode-btn:focus {
+      background: #D5D7E1;
+      border-color: #64AAFA;
+      color: #000;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .square-link {
+        width: 90vw;
+        height: 160px;
+        font-size: 1.1rem;
+      }
+      .toggle-darkmode-btn {
+        top: 16px;
+        right: 16px;
+        padding: 0.6rem 1.1rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-darkmode-btn" id="toggleDarkModeBtn">Toggle Dark Mode</button>
+  <div class="container">
+    <a class="square-link" href="https://docs.google.com/spreadsheets/d/1yt72hvpKM-Zxruq0coI3gmqprw4ctVukHV3CzgNduLY/edit?gid=0#gid=0" target="_blank" rel="noopener">
+      📊<br>BYFT Profits Spreadsheet
+    </a>
+    <a class="square-link" href="index2.html">
+      🧮<br>BYFT Max Effeciency Tool
+    </a>
+  </div>
+  <script>
+    // Theme persistence and toggle logic
+    function setTheme(mode) {
+      if (mode === 'light') {
+        document.body.classList.add('light-mode');
+        localStorage.setItem('byft-theme', 'light');
+      } else {
+        document.body.classList.remove('light-mode');
+        localStorage.setItem('byft-theme', 'dark');
+      }
+    }
+
+    // On load, set theme from storage
+    (function() {
+      const saved = localStorage.getItem('byft-theme');
+      if (saved === 'light') setTheme('light');
+      else setTheme('dark');
+    })();
+
+    document.getElementById('toggleDarkModeBtn').addEventListener('click', function() {
+      if (document.body.classList.contains('light-mode')) {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+    });
+  </script>
+</body>
+</html>
