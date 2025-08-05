@@ -1,7 +1,24 @@
-// This version is browser-compatible and exposes calculateMachinesSummary for use in HTML
+// Machine base prices
+const machineBasePrices = {
+  "Miner": 500,
+  "Oil Rig": 500,
+  "Smelter": 1000,
+  "Blast Furnace": 2000,
+  "Shaper": 3000,
+  "Oil Refinery": 1200,
+  "Constructor I": 7000,
+  "Constructor II": 16000,
+  "Assembler I": 50000,
+  "Assembler II": 125000,
+  "Assembler III": 300000,
+  "Assembler IV": 800000,
+  "Vehicle Maker I": 250000,
+  "Vehicle Maker II": 500000,
+  "Vehicle Maker III": 1000000,
+  "Vehicle Maker IV": 2000000
+};
 
-// Example data loading (replace with your actual data source)
-const data = window.BYFT_DATA || []; // Expect BYFT_DATA to be loaded globally for browser
+const data = window.BYFT_DATA || [];
 
 // Lookup table
 let lookup = {};
@@ -58,7 +75,7 @@ function initBYFTData(data) {
 }
 
 // Main function to call from HTML
-function calculateMachinesSummary(name, quantity = 1, targetTime = 15) {
+function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1) {
   // Reset maps for each call
   const machineMap = {};
   const usageMap = {};
@@ -71,8 +88,11 @@ function calculateMachinesSummary(name, quantity = 1, targetTime = 15) {
     const timePerItem = item.Time;
     const machineType = item.Source;
 
+    // Adjust production speed by level
+    const effectiveTimePerItem = timePerItem / level;
+
     // How many of this item do we need per targetTime?
-    const machinesNeeded = (quantity * timePerItem) / targetTime;
+    const machinesNeeded = (quantity * effectiveTimePerItem) / targetTime;
 
     // Initialize machine list for this type
     if (!machineMap[machineType]) machineMap[machineType] = {};
@@ -98,61 +118,51 @@ function calculateMachinesSummary(name, quantity = 1, targetTime = 15) {
 
   let output = "Machines and their settings:\n\n";
 
+  let totalFarmPrice = 0;
+
+  // Level price multipliers
+  const levelPriceMultipliers = [1, 3, 6, 10, 15];
+  let priceMultiplier = 1;
+  if (typeof level === 'number' && !isNaN(level) && level >= 1 && level <= 5) {
+    priceMultiplier = levelPriceMultipliers[level - 1];
+  }
+
+  // Sort machine types by the defined order
   for (const machineType of machineOrder) {
     if (machineMap[machineType]) {
       output += `== ${machineType} ==\n`;
       for (const product in machineMap[machineType]) {
+        // Always combine machines making the same product, regardless of destination
         const count = Math.ceil(machineMap[machineType][product]);
         const tiles = (machineTileSizes[machineType] || 0) * count;
         totalTiles += tiles;
-
-        // Build usage string
-        let usageStr = "";
-        if (usageMap[machineType] && usageMap[machineType][product] && usageMap[machineType][product].length > 0) {
-          // Show all unique usages
-          const usages = usageMap[machineType][product]
-            .map(u => `into ${u.parentMachine} making ${u.parentProduct}`)
-            .filter((v, i, a) => a.indexOf(v) === i) // unique
-            .join(", ");
-          usageStr = ` ${usages}`;
+        output += `- ${count} set to produce \"${product}\"\n`;
+        // Add to farm price only if count is a valid number and machineType is in base prices
+        if (machineBasePrices[machineType]) {
+          totalFarmPrice += count * machineBasePrices[machineType] * priceMultiplier;
         }
-
-        output += `- ${count} set to produce "${product}"${usageStr ? " " + usageStr : ""}\n`;
       }
       output += "\n";
     }
   }
 
-  // Print any remaining machine types not in the order
-  for (const machineType in machineMap) {
-    if (!machineOrder.includes(machineType)) {
-      output += `== ${machineType} ==\n`;
-      for (const product in machineMap[machineType]) {
-        const count = Math.ceil(machineMap[machineType][product]);
-        const tiles = (machineTileSizes[machineType] || 0) * count;
-        totalTiles += tiles;
-
-        let usageStr = "";
-        if (usageMap[machineType] && usageMap[machineType][product] && usageMap[machineType][product].length > 0) {
-          const usages = usageMap[machineType][product]
-            .map(u => `into ${u.parentMachine} making ${u.parentProduct}`)
-            .filter((v, i, a) => a.indexOf(v) === i)
-            .join(", ");
-          usageStr = ` ${usages}`;
-        }
-
-        output += `- ${count} set to produce "${product}"${usageStr ? " " + usageStr : ""}\n`;
-      }
-      output += "\n";
-    }
-  }
-
-  output += `Total machine space used: ${totalTiles} tiles.\n`;
+  output += `Total machine space: ${totalTiles} tiles.\n`;
+  output += `Total machine price: $${totalFarmPrice.toLocaleString()}\n`;
 
   const minConveyor = Math.ceil(totalTiles * 1.15);
-  const maxConveyor = Math.ceil(totalTiles * 1.30);
+  const maxConveyor = Math.ceil(totalTiles * 1.40);
 
-  output += `With conveyors adding 15-30%: ${minConveyor}-${maxConveyor} tiles`;
+  output += `\nWith conveyors adding 15-40%: ${minConveyor}-${maxConveyor} Tiles. ${(minConveyor/16).toFixed(2)}-${(maxConveyor/16).toFixed(2)} Game Squares.`;
+  if (window.BYFT_ADVANCED_MODE) {
+    output += `\nSquared Farm with conveyors: ${Math.ceil(Math.sqrt(minConveyor))}² - ${Math.ceil(Math.sqrt(maxConveyor))}² Tiles. ${Math.ceil(Math.sqrt(minConveyor/4))}² - ${Math.ceil(Math.sqrt(maxConveyor/4))}² Game Squares.`;
+    output += `\n50x Farm with conveyors: ${Math.ceil(minConveyor / 50)}x50 - ${Math.ceil(maxConveyor / 50)}x50 Tiles\n`;
+
+    const finalProduct = lookup[name];
+    const cashPerSecond = finalProduct ? finalProduct.Value / targetTime : 0;
+    output += `\nCash per second for ${name} Level ${level}: $${(cashPerSecond * quantity).toFixed(2)}\n`;
+    // output += `F2P Plot amount: ${Math.floor(6000/maxConveyor)} - ${Math.floor(6000/minConveyor)}. P2W Plot amount: ${Math.floor(10000/maxConveyor)} - ${Math.floor(10000/minConveyor)}\n`;
+    // output += `F2P Cash per second: ${(cashPerSecond * quantity)*(Math.floor(6000/maxConveyor))} - ${(cashPerSecond * quantity)*(Math.floor(6000/minConveyor))}\n`;
+  }
 
   return output;
 }
@@ -160,3 +170,178 @@ function calculateMachinesSummary(name, quantity = 1, targetTime = 15) {
 // Expose for HTML usage
 window.initBYFTData = initBYFTData;
 window.calculateMachinesSummary = calculateMachinesSummary;
+
+// Build graph data (nodes/links) for a product
+function buildMachineGraph(name, quantity = 1, targetTime = 15) {
+  const nodes = [];
+  const links = [];
+  const nodeMap = {};
+
+  // Helper to generate a unique node id for split sources
+  function getSplitNodeId(machineType, product, parentId) {
+    return machineType + ':' + product + (parentId ? ':to:' + parentId : '');
+  }
+
+  function addNode(machineType, product, parentId = null, count = null) {
+    const nodeId = getSplitNodeId(machineType, product, parentId);
+    if (!nodeMap[nodeId]) {
+      const item = lookup[product];
+      nodeMap[nodeId] = {
+        id: nodeId,
+        machine: machineType,
+        product: product,
+        parts: item ? item.Parts : {},
+        parent: parentId,
+        count: count // store count for split nodes
+      };
+      nodes.push(nodeMap[nodeId]);
+    }
+    if (parentId) {
+      links.push({ source: nodeId, target: parentId });
+    }
+    return nodeId;
+  }
+
+  // Recursive traversal, splitting sources by destination
+  function traverse(product, parentId = null, quantity = 1, targetTime = 15) {
+    const item = lookup[product];
+    if (!item) return;
+    const machineType = item.Source;
+    // Calculate machines needed for this connection
+    const machinesNeeded = (quantity * item.Time) / targetTime;
+    const nodeId = addNode(machineType, product, parentId, Math.ceil(machinesNeeded));
+    for (const part in item.Parts) {
+      const partQty = item.Parts[part];
+      traverse(part, nodeId, partQty * quantity, targetTime);
+    }
+  }
+
+  traverse(name);
+  return { nodes, links };
+}
+// Cytoscape.js visualization for machine graph
+function generateMachineGraphCytoscape(productName, container) {
+  // Build graph data
+  const graphData = buildMachineGraph(productName);
+  container.innerHTML = '';
+  if (!graphData.nodes.length) {
+    container.textContent = 'No graph data available.';
+    return;
+  }
+
+  // Get actual machine counts from summary logic
+  const machineMap = {};
+  // Recalculate machine counts for the selected product
+  (function calculateMachines(name, quantity = 1, targetTime = 15) {
+    const item = lookup[name];
+    if (!item) return;
+    const timePerItem = item.Time;
+    const machineType = item.Source;
+    const machinesNeeded = (quantity * timePerItem) / targetTime;
+    if (!machineMap[machineType]) machineMap[machineType] = {};
+    machineMap[machineType][name] = (machineMap[machineType][name] || 0) + machinesNeeded;
+    for (const part in item.Parts) {
+      const partQty = item.Parts[part];
+      calculateMachines(part, partQty * quantity, targetTime);
+    }
+  })(productName);
+
+  // Prepare Cytoscape elements
+  const elements = [];
+  graphData.nodes.forEach(n => {
+    const machineType = n.machine;
+    const product = n.product;
+    const count = n.count || 1;
+    let label = `${count}x ${machineType}\n${product}`;
+    elements.push({
+      data: {
+        id: n.id,
+        label: label
+      }
+    });
+  });
+
+  // Add edges without labels
+  graphData.links.forEach(l => {
+    elements.push({
+      data: {
+        id: l.source + '_' + l.target,
+        source: l.source,
+        target: l.target
+      }
+    });
+  });
+
+  // Final product node id (root)
+  const rootId = graphData.nodes.length ? graphData.nodes[0].id : null;
+
+  // Create Cytoscape instance with dagre layout for web-like spacing
+  const cy = window.cytoscape({
+    container: container,
+    elements: elements,
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'background-color': '#4e8cff',
+          'label': 'data(label)',
+          'color': '#fff',
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'font-size': '16px',
+          'font-weight': 'bold',
+          'width': 140,
+          'height': 70,
+          'padding': '4px',
+          'shape': 'rectangle',
+          'text-wrap': 'wrap',
+          'text-max-width': 180
+        }
+      },
+      {
+        selector: 'edge',
+        style: {
+          'width': 2,
+          'line-color': '#aaa',
+          'target-arrow-color': '#aaa',
+          'target-arrow-shape': 'triangle',
+          'curve-style': 'straight', // sharp bends
+          'label': 'data(label)',
+          'color': '#222',
+          'font-size': '14px',
+          'text-background-opacity': 1,
+          'text-background-color': '#fff',
+          'text-background-shape': 'roundrectangle',
+          'text-margin-y': -8,
+          'z-index': 9999,
+          'opacity': 1 // always fully visible
+        }
+      }
+    ],
+    layout: {
+      name: 'dagre',
+      rankDir: 'BT', // Bottom to Top (final product at top)
+      nodeSep: 2,   // More space between nodes
+      edgeSep: 10,   // More space between edges
+      rankSep: 50,   // More space between levels
+      roots: rootId ? [rootId] : undefined,
+      animate: true
+    },
+    userZoomingEnabled: true,
+    userPanningEnabled: true,
+    boxSelectionEnabled: false,
+    autoungrabify: true, // disables node dragging
+    wheelSensitivity: 2.5, // increase mouse wheel zoom speed (default is 1)
+    zoomFactor: 1.2 // increase zoom step for double-click/touchpad (default is 0.05)
+  });
+
+  // Zoom in on the graph after layout
+  cy.ready(function () {
+    cy.fit(undefined, 30); // fit to graph with less padding (more zoomed in)
+    cy.zoom(cy.zoom() * 1.5); // zoom in further
+  });
+}
+
+window.generateMachineGraphCytoscape = generateMachineGraphCytoscape;
+
+window.generateMachineGraph = generateMachineGraph;
