@@ -1,9 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+  <script src="https://unpkg.com/dagre/dist/dagre.min.js"></script>
+  <script src="https://unpkg.com/cytoscape-dagre/cytoscape-dagre.js"></script>
   <meta charset="UTF-8">
   <title>BYFT Max Effeciency Tool</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+  <script>
+    // Always start with Advanced mode off
+    window.BYFT_ADVANCED_MODE = false;
+    document.addEventListener('DOMContentLoaded', function() {
+      var advToggle = document.getElementById('advancedModeToggle');
+      if (advToggle) advToggle.checked = false;
+    });
+    // Register dagre layout extension
+    if (window.cytoscape && window.cytoscapeDagre) {
+      cytoscape.use(window.cytoscapeDagre);
+    }
+  </script>
   <style>
     body {
       min-height: 100vh;
@@ -16,10 +32,11 @@
       font-family: 'Segoe UI', Arial, sans-serif;
       transition: background 0.2s, color 0.2s;
     }
+
     .tool-container {
       background: #23272f;
       border-radius: 24px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
       padding: 2rem 3rem;
       display: flex;
       flex-direction: column;
@@ -27,17 +44,21 @@
       gap: 1.5rem;
       min-width: 320px;
     }
+
     label {
       margin-bottom: 0.2rem;
       font-weight: 500;
     }
-    input, select {
+
+    input,
+    select {
       font-size: 1.1rem;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       border: none;
       margin-top: 0.2rem;
     }
+
     button {
       background: #141620;
       color: #fff;
@@ -47,20 +68,24 @@
       padding: 0.7rem 1.5rem;
       cursor: pointer;
       border: 3px solid transparent;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
       transition: background 0.15s, border-color 0.15s, color 0.15s;
       margin-top: 1rem;
     }
-    button:hover, button:focus {
+
+    button:hover,
+    button:focus {
       background: #2A2D34;
       border-color: #64AAFA;
       outline: none;
     }
+
     #result {
       margin-top: 1.5rem;
       font-size: 1.1rem;
       color: #64AAFA;
-      font-weight: bold; /* Make result text bold */
+      font-weight: bold;
+      /* Make result text bold */
       white-space: pre-line;
       word-break: break-word;
       text-align: left;
@@ -70,6 +95,7 @@
       width: 100%;
       box-sizing: border-box;
     }
+
     .input-group {
       display: flex;
       flex-direction: column;
@@ -77,6 +103,7 @@
       width: 100%;
       margin-bottom: 0.5rem;
     }
+
     /* Toggle button styles */
     .toggle-darkmode-btn {
       position: absolute;
@@ -90,67 +117,81 @@
       font-weight: 600;
       padding: 0.7rem 1.5rem;
       cursor: pointer;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
       transition: background 0.15s, border-color 0.15s, color 0.15s;
       z-index: 10;
     }
-    .toggle-darkmode-btn:hover, .toggle-darkmode-btn:focus {
+
+    .toggle-darkmode-btn:hover,
+    .toggle-darkmode-btn:focus {
       background: #2A2D34;
       border-color: #64AAFA;
       outline: none;
     }
+
     /* Light mode styles */
     body.light-mode {
       background: #B2B5C6;
       color: #000;
     }
+
     body.light-mode .tool-container {
       background: #EAEEF5;
       color: #000;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
     }
+
     body.light-mode label {
       color: #000;
     }
-    body.light-mode input, body.light-mode select {
+
+    body.light-mode input,
+    body.light-mode select {
       color: #000;
       background: #fff;
     }
+
     body.light-mode button {
       background: #EAEEF5;
       color: #000;
       border: 3px solid transparent;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
+
     body.light-mode button:hover,
     body.light-mode button:focus {
       background: #D5D7E1;
       border-color: #64AAFA;
       color: #000;
     }
+
     body.light-mode #result {
       background: #e4e5ec;
       color: #64AAFA;
-      font-weight: bold; 
+      font-weight: bold;
     }
+
     body.light-mode .toggle-darkmode-btn {
       background: #EAEEF5;
       color: #000;
       border: 3px solid transparent;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
+
     body.light-mode .toggle-darkmode-btn:hover,
     body.light-mode .toggle-darkmode-btn:focus {
       background: #D5D7E1;
       border-color: #64AAFA;
       color: #000;
     }
+
     @media (max-width: 700px) {
       .tool-container {
         padding: 1rem 0.5rem;
         min-width: unset;
         width: 98vw;
       }
+
       .toggle-darkmode-btn {
         top: 16px;
         right: 16px;
@@ -160,6 +201,7 @@
     }
   </style>
 </head>
+
 <body>
   <button class="toggle-darkmode-btn" id="toggleDarkModeBtn">Toggle Dark Mode</button>
   <div class="tool-container">
@@ -261,19 +303,33 @@
           <option>Truck</option>
         </select>
       </div>
-      <!--
       <div class="input-group">
         <label for="quantity">Quantity:</label>
         <input id="quantity" name="quantity" type="number" min="1" value="1" required>
       </div>
       <div class="input-group">
         <label for="targetTime">Target Time (seconds):</label>
-        <input id="targetTime" name="targetTime" type="number" min="1" value="15" required>
+        <input id="targetTime" name="targetTime" type="number" min="0.01" step="0.01" value="15" required>
       </div>
-      -->
+      <div class="input-group">
+        <label for="level">Level:</label>
+        <input id="level" name="level" type="number" min="1" max="5" value="1" required>
+      </div>
       <button type="submit">Calculate</button>
+      <button type="button" id="generateGraphBtn" style="margin-left:1rem;">Generate Graph</button>
+      <label style="margin-left:16px; font-weight:normal;">
+        <input type="checkbox" id="advancedModeToggle" onchange="window.BYFT_ADVANCED_MODE = this.checked; runSummary();" />
+        Advanced mode
+      </label>
     </form>
     <div id="result"></div>
+  <div id="cytoscape-graph" style="width:100%;max-width:1500px;height:600px;margin:2rem auto 0 auto;"></div>
+  <script>
+    const cytoGraph = document.getElementById('cytoscape-graph');
+    cytoGraph.style.width = '1500px';
+    cytoGraph.style.height = '600px';
+    cytoGraph.style.border = '2px solid #333';
+  </script>
     <small style="display:block; margin-top:0.5rem; text-align:left; color:#aaa;">
       This is under the assumption that everything is the same level.<br>
       Not all farms require conveyors.<br>
@@ -293,13 +349,13 @@
     }
 
     // On load, set theme from storage
-    (function() {
+    (function () {
       const saved = localStorage.getItem('byft-theme');
       if (saved === 'light') setTheme('light');
       else setTheme('dark');
     })();
 
-    document.getElementById('toggleDarkModeBtn').addEventListener('click', function() {
+    document.getElementById('toggleDarkModeBtn').addEventListener('click', function () {
       if (document.body.classList.contains('light-mode')) {
         setTheme('dark');
       } else {
@@ -308,21 +364,38 @@
     });
   </script>
   <script>
-  fetch('BYFT_formatted.json')
-    .then(res => res.json())
-    .then(data => {
-      window.initBYFTData(data);
-    });
+    fetch('BYFT_formatted.json')
+      .then(res => res.json())
+      .then(data => {
+        window.initBYFTData(data);
+      });
   </script>
   <script src="format.js"></script>
   <script>
-    document.getElementById('machineForm').addEventListener('submit', function() {
+    document.getElementById('generateGraphBtn').addEventListener('click', function () {
       const name = document.getElementById('name').value.trim();
-      let targetTime = 15;
-      let quantity = 1;
-      // Use the target time and quantity directly
+      // Clear previous graph
+      const cytoGraph = document.getElementById('cytoscape-graph');
+      cytoGraph.innerHTML = '';
       try {
-        const result = window.calculateMachinesSummary(name, quantity, targetTime);
+        if (window.generateMachineGraphCytoscape) {
+          window.generateMachineGraphCytoscape(name, cytoGraph);
+        } else {
+          cytoGraph.textContent = 'Cytoscape graph function not loaded.';
+        }
+      } catch (e) {
+        cytoGraph.textContent = 'Error rendering graph: ' + e.message;
+      }
+    });
+  </script>
+  <script>
+    document.getElementById('machineForm').addEventListener('submit', function () {
+      const name = document.getElementById('name').value.trim();
+      const quantity = parseFloat(document.getElementById('quantity').value);
+      const targetTime = parseFloat(document.getElementById('targetTime').value);
+      const level = parseInt(document.getElementById('level').value);
+      try {
+        const result = window.calculateMachinesSummary(name, quantity, targetTime, level);
         document.getElementById('result').textContent = result;
       } catch (e) {
         document.getElementById('result').textContent = "Error: " + e.message;
@@ -330,4 +403,5 @@
     });
   </script>
 </body>
+
 </html>
