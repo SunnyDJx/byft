@@ -160,8 +160,9 @@ function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1
     const finalProduct = lookup[name];
     const cashPerSecond = finalProduct ? finalProduct.Value / targetTime : 0;
     output += `\nCash per second for ${name} Level ${level}: $${(cashPerSecond * quantity).toFixed(2)}\n`;
-    // output += `F2P Plot amount: ${Math.floor(6000/maxConveyor)} - ${Math.floor(6000/minConveyor)}. P2W Plot amount: ${Math.floor(10000/maxConveyor)} - ${Math.floor(10000/minConveyor)}\n`;
-    // output += `F2P Cash per second: ${(cashPerSecond * quantity)*(Math.floor(6000/maxConveyor))} - ${(cashPerSecond * quantity)*(Math.floor(6000/minConveyor))}\n`;
+    output += `F2P Plot amount: ${Math.floor(6000/maxConveyor)} - ${Math.floor(6000/minConveyor)} / P2W Plot amount: ${Math.floor(10000/maxConveyor)} - ${Math.floor(10000/minConveyor)}\n`;
+    output += `F2P Cash per second: $${((cashPerSecond * quantity)*(Math.floor(6000/maxConveyor))).toLocaleString()} - $${((cashPerSecond * quantity)*(Math.floor(6000/minConveyor))).toLocaleString()}\n`;
+    output += `P2W Cash per second: $${((cashPerSecond * quantity)*(Math.floor(10000/maxConveyor))).toLocaleString()} - $${((cashPerSecond * quantity)*(Math.floor(10000/minConveyor))).toLocaleString()}\n`;
   }
 
   return output;
@@ -172,10 +173,11 @@ window.initBYFTData = initBYFTData;
 window.calculateMachinesSummary = calculateMachinesSummary;
 
 // Build graph data (nodes/links) for a product
-function buildMachineGraph(name, quantity = 1, targetTime = 15) {
+function buildMachineGraph(name, quantity = 1, targetTime = 15, level = 1) {
   const nodes = [];
   const links = [];
   const nodeMap = {};
+  // No aggregation map needed for split nodes
 
   // Helper to generate a unique node id for split sources
   function getSplitNodeId(machineType, product, parentId) {
@@ -192,7 +194,7 @@ function buildMachineGraph(name, quantity = 1, targetTime = 15) {
         product: product,
         parts: item ? item.Parts : {},
         parent: parentId,
-        count: count // store count for split nodes
+        count: count // set to split count for this node
       };
       nodes.push(nodeMap[nodeId]);
     }
@@ -203,26 +205,34 @@ function buildMachineGraph(name, quantity = 1, targetTime = 15) {
   }
 
   // Recursive traversal, splitting sources by destination
-  function traverse(product, parentId = null, quantity = 1, targetTime = 15) {
+  function traverse(product, parentId = null, quantity = 1, targetTime = 15, level = 1) {
     const item = lookup[product];
     if (!item) return;
     const machineType = item.Source;
+    // Adjust production speed by level
+    const effectiveTimePerItem = item.Time / level;
     // Calculate machines needed for this connection
-    const machinesNeeded = (quantity * item.Time) / targetTime;
-    const nodeId = addNode(machineType, product, parentId, Math.ceil(machinesNeeded));
+    const machinesNeeded = (quantity * effectiveTimePerItem) / targetTime;
+    const nodeId = addNode(machineType, product, parentId, Math.ceil(machinesNeeded)); // set split count for this node
+    // For each ingredient, always pass the RAW quantity (to match summary logic)
     for (const part in item.Parts) {
       const partQty = item.Parts[part];
-      traverse(part, nodeId, partQty * quantity, targetTime);
+      traverse(part, nodeId, partQty * quantity, targetTime, level);
     }
   }
 
-  traverse(name);
+  traverse(name, null, quantity, targetTime, level);
   return { nodes, links };
 }
 // Cytoscape.js visualization for machine graph
 function generateMachineGraphCytoscape(productName, container) {
-  // Build graph data
-  const graphData = buildMachineGraph(productName);
+  // Get input values from the form if available
+  let quantity = 1, targetTime = 15, level = 1;
+  if (document.getElementById('quantity')) quantity = parseFloat(document.getElementById('quantity').value);
+  if (document.getElementById('targetTime')) targetTime = parseFloat(document.getElementById('targetTime').value);
+  if (document.getElementById('level')) level = parseInt(document.getElementById('level').value);
+  // Build graph data with correct machine counts
+  const graphData = buildMachineGraph(productName, quantity, targetTime, level);
   container.innerHTML = '';
   if (!graphData.nodes.length) {
     container.textContent = 'No graph data available.';
