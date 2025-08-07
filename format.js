@@ -75,13 +75,20 @@ function initBYFTData(data) {
 }
 
 // Main function to call from HTML
-function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1) {
+// Add enablePackager and enableLoadingDock as optional arguments (default false)
+function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1, enablePackager = false, enableLoadingDock = false) {
   // Reset maps for each call
   const machineMap = {};
   const usageMap = {};
   let totalTiles = 0;
+  let packagerTiles = 0;
+  let loadingDockTiles = 0;
+  let packagerPrice = 0;
+  let loadingDockPrice = 0;
+  let packagerMultiplier = 1;
 
   // Recursive calculation
+  // Instead of summing, just push each split as a separate entry (array of splits per machine type)
   function calculateMachines(name, quantity, targetTime, parentProduct = null, parentMachine = null) {
     const item = lookup[name];
     if (!item) return;
@@ -95,16 +102,19 @@ function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1
     const machinesNeeded = (quantity * effectiveTimePerItem) / targetTime;
 
     // Initialize machine list for this type
-    if (!machineMap[machineType]) machineMap[machineType] = {};
+    if (!machineMap[machineType]) machineMap[machineType] = [];
 
-    // Track machines producing this specific item
-    machineMap[machineType][name] = (machineMap[machineType][name] || 0) + machinesNeeded;
-
-    // Track usage for output
-    if (!usageMap[machineType]) usageMap[machineType] = {};
-    if (!usageMap[machineType][name]) usageMap[machineType][name] = [];
+    // Always push a new split entry, never combine
+    let key = name;
     if (parentProduct && parentMachine) {
-      usageMap[machineType][name].push({ parentProduct, parentMachine });
+      key = name + ' (for ' + parentProduct + ' in a ' + parentMachine + ')';
+    }
+    machineMap[machineType].push({ key, machinesNeeded });
+
+    // Track usage for output (optional, not used in display)
+    if (!usageMap[machineType]) usageMap[machineType] = [];
+    if (parentProduct && parentMachine) {
+      usageMap[machineType].push({ key, parentProduct, parentMachine });
     }
 
     // For each ingredient, always pass the original targetTime and track parent
@@ -127,16 +137,32 @@ function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1
     priceMultiplier = levelPriceMultipliers[level - 1];
   }
 
+  // Packager and Loading Dock price tables (by level)
+  const packagerBasePrices = [100000, 300000, 600000, 1000000, 1500000];
+  const loadingDockBasePrices = [50000, 150000, 300000, 500000, 750000];
+
   // Sort machine types by the defined order
   for (const machineType of machineOrder) {
     if (machineMap[machineType]) {
       output += `== ${machineType} ==\n`;
-      for (const product in machineMap[machineType]) {
-        // Always combine machines making the same product, regardless of destination
-        const count = Math.ceil(machineMap[machineType][product]);
+      // Combine by key after rounding up each split
+      const combined = {};
+      for (const entry of machineMap[machineType]) {
+        const count = Math.ceil(entry.machinesNeeded);
+        if (!combined[entry.key]) combined[entry.key] = 0;
+        combined[entry.key] += count;
+      }
+      // Sort keys by the product being created (before ' (to ...')
+      const sortedKeys = Object.keys(combined).sort((a, b) => {
+        const prodA = a.split(' (to ')[0];
+        const prodB = b.split(' (to ')[0];
+        return prodA.localeCompare(prodB);
+      });
+      for (const key of sortedKeys) {
+        const count = combined[key];
         const tiles = (machineTileSizes[machineType] || 0) * count;
         totalTiles += tiles;
-        output += `- ${count} set to produce \"${product}\"\n`;
+        output += `- ${count} set to produce \"${key}\"\n`;
         // Add to farm price only if count is a valid number and machineType is in base prices
         if (machineBasePrices[machineType]) {
           totalFarmPrice += count * machineBasePrices[machineType] * priceMultiplier;
@@ -146,23 +172,38 @@ function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1
     }
   }
 
+  if (enablePackager) {
+    packagerTiles = 9;
+    packagerPrice = packagerBasePrices[level - 1] || 0;
+    totalTiles += packagerTiles;
+    totalFarmPrice += packagerPrice;
+    packagerMultiplier = 1.35;
+  }
+  if (enableLoadingDock) {
+    loadingDockTiles = 9;
+    loadingDockPrice = loadingDockBasePrices[level - 1] || 0;
+    totalTiles += loadingDockTiles;
+    totalFarmPrice += loadingDockPrice;
+  }
+
   output += `Total machine space: ${totalTiles} tiles.\n`;
   output += `Total machine price: $${totalFarmPrice.toLocaleString()}\n`;
 
   const minConveyor = Math.ceil(totalTiles * 1.15);
   const maxConveyor = Math.ceil(totalTiles * 1.40);
 
-  output += `\nWith conveyors adding 15-40%: ${minConveyor}-${maxConveyor} Tiles. ${(minConveyor/16).toFixed(2)}-${(maxConveyor/16).toFixed(2)} Game Squares.`;
+  output += `\nWith conveyors adding 15-40%: ${minConveyor}-${maxConveyor} Tiles. ${(minConveyor / 16).toFixed(2)}-${(maxConveyor / 16).toFixed(2)} Game Squares.`;
   if (window.BYFT_ADVANCED_MODE) {
-    output += `\nSquared Farm with conveyors: ${Math.ceil(Math.sqrt(minConveyor))}² - ${Math.ceil(Math.sqrt(maxConveyor))}² Tiles. ${Math.ceil(Math.sqrt(minConveyor/4))}² - ${Math.ceil(Math.sqrt(maxConveyor/4))}² Game Squares.`;
+    output += `\nSquared Farm with conveyors: ${Math.ceil(Math.sqrt(minConveyor))}² - ${Math.ceil(Math.sqrt(maxConveyor))}² Tiles. ${Math.ceil(Math.sqrt(minConveyor / 4))}² - ${Math.ceil(Math.sqrt(maxConveyor / 4))}² Game Squares.`;
     output += `\n50x Farm with conveyors: ${Math.ceil(minConveyor / 50)}x50 - ${Math.ceil(maxConveyor / 50)}x50 Tiles\n`;
 
     const finalProduct = lookup[name];
-    const cashPerSecond = finalProduct ? finalProduct.Value / targetTime : 0;
-    output += `\nCash per second for ${name} Level ${level}: $${(cashPerSecond * quantity).toFixed(2)}\n`;
-    output += `F2P Plot amount: ${Math.floor(6000/maxConveyor)} - ${Math.floor(6000/minConveyor)} / P2W Plot amount: ${Math.floor(10000/maxConveyor)} - ${Math.floor(10000/minConveyor)}\n`;
-    output += `F2P Cash per second: $${((cashPerSecond * quantity)*(Math.floor(6000/maxConveyor))).toLocaleString()} - $${((cashPerSecond * quantity)*(Math.floor(6000/minConveyor))).toLocaleString()}\n`;
-    output += `P2W Cash per second: $${((cashPerSecond * quantity)*(Math.floor(10000/maxConveyor))).toLocaleString()} - $${((cashPerSecond * quantity)*(Math.floor(10000/minConveyor))).toLocaleString()}\n`;
+    let cashPerSecond = finalProduct ? finalProduct.Value / targetTime : 0;
+    cashPerSecond = cashPerSecond * quantity * packagerMultiplier;
+    output += `\nCash per second for ${name} Level ${level}: $${cashPerSecond.toFixed(2)}\n`;
+    output += `F2P Plot amount: ${Math.floor(6000 / maxConveyor)} - ${Math.floor(6000 / minConveyor)} / P2W Plot amount: ${Math.floor(10000 / maxConveyor)} - ${Math.floor(10000 / minConveyor)}\n`;
+    output += `F2P Cash per second: $${(cashPerSecond * (Math.floor(6000 / maxConveyor))).toLocaleString()} - $${(cashPerSecond * (Math.floor(6000 / minConveyor))).toLocaleString()}\n`;
+    output += `P2W Cash per second: $${(cashPerSecond * (Math.floor(10000 / maxConveyor))).toLocaleString()} - $${(cashPerSecond * (Math.floor(10000 / minConveyor))).toLocaleString()}\n`;
   }
 
   return output;
@@ -248,8 +289,8 @@ function generateMachineGraphCytoscape(productName, container) {
     const timePerItem = item.Time;
     const machineType = item.Source;
     const machinesNeeded = (quantity * timePerItem) / targetTime;
-    if (!machineMap[machineType]) machineMap[machineType] = {};
-    machineMap[machineType][name] = (machineMap[machineType][name] || 0) + machinesNeeded;
+    if (!machineMap[machineType]) machineMap[machineType] = {}; // Initialize machine type if not already done
+    machineMap[machineType][name] = (machineMap[machineType][name] || 0) + machinesNeeded; // Track machines producing this specific item
     for (const part in item.Parts) {
       const partQty = item.Parts[part];
       calculateMachines(part, partQty * quantity, targetTime);
