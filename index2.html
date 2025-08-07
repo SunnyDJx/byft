@@ -322,9 +322,14 @@
           onchange="window.BYFT_ADVANCED_MODE = this.checked; runSummary();" />
         Advanced mode
       </label>
-      <small style="display:block; margin-top:0.5rem; text-align:left; color:#aaa;">
-      Currently, the text results and the graph do not share the exact same number of Miners required. This issue only shows up for Trucks, Vans, and Cars.<br>
-    </small>
+      <label style="margin-left:16px; font-weight:normal;">
+        <input type="checkbox" id="enablePackager" onchange="runSummary();" />
+        Enable Packager
+      </label>
+      <label style="margin-left:16px; font-weight:normal;">
+        <input type="checkbox" id="enableLoadingDock" onchange="runSummary();" />
+        Enable Loading Dock
+      </label>
     </form>
     <div id="result"></div>
     <div id="cytoscape-graph" style="width:100%;max-width:1500px;height:600px;margin:2rem auto 0 auto;"></div>
@@ -392,20 +397,24 @@
     });
   </script>
   <script>
-    document.getElementById('machineForm').addEventListener('submit', function () {
+    function runSummary() {
       const name = document.getElementById('name').value.trim();
       const quantity = parseFloat(document.getElementById('quantity').value);
       const targetTime = parseFloat(document.getElementById('targetTime').value);
       const level = parseInt(document.getElementById('level').value);
+      const enablePackager = document.getElementById('enablePackager')?.checked || false;
+      const enableLoadingDock = document.getElementById('enableLoadingDock')?.checked || false;
       try {
-        const result = window.calculateMachinesSummary(name, quantity, targetTime, level);
+        const result = window.calculateMachinesSummary(name, quantity, targetTime, level, enablePackager, enableLoadingDock);
         document.getElementById('result').textContent = result;
       } catch (e) {
         document.getElementById('result').textContent = "Error: " + e.message;
       }
+    }
+    document.getElementById('machineForm').addEventListener('submit', function () {
+      runSummary();
     });
   </script>
 </body>
 
 </html>
-
