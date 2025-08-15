@@ -431,7 +431,7 @@
     }
   },
   {
-    "Name": "Hard Drive Disk",
+    "Name": "Hard Disk Drive",
     "Value": 350,
     "Time": 10,
     "Source": "Constructor II",
