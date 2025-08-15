@@ -75,7 +75,6 @@ function initBYFTData(data) {
 }
 
 // Main function to call from HTML
-// Add enablePackager and enableLoadingDock as optional arguments (default false)
 function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1, enablePackager = false, enableLoadingDock = false) {
   // Reset maps for each call
   const machineMap = {};
@@ -88,7 +87,6 @@ function calculateMachinesSummary(name, quantity = 1, targetTime = 15, level = 1
   let packagerMultiplier = 1;
 
   // Recursive calculation
-  // Instead of summing, just push each split as a separate entry (array of splits per machine type)
   function calculateMachines(name, quantity, targetTime, parentProduct = null, parentMachine = null) {
     const item = lookup[name];
     if (!item) return;
@@ -218,7 +216,6 @@ function buildMachineGraph(name, quantity = 1, targetTime = 15, level = 1) {
   const nodes = [];
   const links = [];
   const nodeMap = {};
-  // No aggregation map needed for split nodes
 
   // Helper to generate a unique node id for split sources
   function getSplitNodeId(machineType, product, parentId) {
@@ -235,7 +232,7 @@ function buildMachineGraph(name, quantity = 1, targetTime = 15, level = 1) {
         product: product,
         parts: item ? item.Parts : {},
         parent: parentId,
-        count: count // set to split count for this node
+        count: count
       };
       nodes.push(nodeMap[nodeId]);
     }
@@ -396,3 +393,4 @@ function generateMachineGraphCytoscape(productName, container) {
 window.generateMachineGraphCytoscape = generateMachineGraphCytoscape;
 
 window.generateMachineGraph = generateMachineGraph;
+
